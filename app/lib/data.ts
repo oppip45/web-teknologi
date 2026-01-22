@@ -151,6 +151,10 @@ export async function fetchInvoicesPages(query: string) {
 export async function fetchInvoiceById(id: string) {
   noStore();
 
+  if (!id) {
+    throw new Error('fetchInvoiceById called with undefined id');
+  }
+
   try {
     const data = await sql<InvoiceForm[]>`
       SELECT
@@ -173,6 +177,7 @@ export async function fetchInvoiceById(id: string) {
     throw new Error('Failed to fetch invoice.');
   }
 }
+
 
 /* ---------------- CUSTOMERS ---------------- */
 

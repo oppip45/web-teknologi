@@ -1,47 +1,44 @@
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
+import Cards from '@/app/ui/dashboard/cards';
+import RevenueChart from '@/app/ui/dashboard/revenue-chart';
+import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
+import { fetchRevenue, fetchLatestInvoices, fetchCardData } from '@/app/lib/data';
 
-import Search from '@/app/ui/search';
-import Table from '@/app/ui/invoices/table';
-import Pagination from '@/app/ui/invoices/pagination';
-import { CreateInvoice } from '@/app/ui/invoices/buttons';
-import {
-  fetchFilteredInvoices,
-  fetchInvoicesPages,
-} from '@/app/lib/data';
-
-export default async function Page(props: {
-  searchParams?: Promise<{
-    query?: string;
-    page?: string;
-  }>;
-}) {
-  const searchParams = await props.searchParams;
-
-  const query = searchParams?.query || '';
-  const currentPage = Number(searchParams?.page) || 1;
-
-  // 🔥 FETCH DI PAGE, BUKAN DI TABLE
-  const invoices = await fetchFilteredInvoices(query, currentPage);
-  const totalPages = await fetchInvoicesPages(query);
+export default async function Page() {
+  const revenue = await fetchRevenue();
+  const latestInvoices = await fetchLatestInvoices();
+  const {
+    numberOfInvoices,
+    numberOfCustomers,
+    totalPaidInvoices,
+    totalPendingInvoices,
+  } = await fetchCardData();
 
   return (
-    <div className="w-full">
-      <div className="flex w-full items-center justify-between">
-        <h1 className="text-2xl">Invoices</h1>
+    <main>
+      <h1 className="mb-4 text-xl md:text-2xl">Dashboard</h1>
+
+      {/* ===== CARDS ===== */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <Cards
+          numberOfCustomers={numberOfCustomers}
+          numberOfInvoices={numberOfInvoices}
+          totalPaidInvoices={totalPaidInvoices}
+          totalPendingInvoices={totalPendingInvoices}
+        />
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search invoices..." />
-        <CreateInvoice />
-      </div>
+      {/* ===== RECENT + LATEST ===== */}
+      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4">
+        {/* Recent Revenue (LEFT, BIG) */}
+        <div className="md:col-span-3">
+          <RevenueChart revenue={revenue} />
+        </div>
 
-      {/* 🔥 KIRIM DATA, BUKAN QUERY */}
-      <Table invoices={invoices} />
-
-      <div className="mt-5 flex w-full justify-center">
-        <Pagination totalPages={totalPages} />
+        {/* Latest Invoices (RIGHT) */}
+        <div className="md:col-span-1">
+          <LatestInvoices latestInvoices={latestInvoices} />
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
