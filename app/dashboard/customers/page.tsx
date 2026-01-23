@@ -5,37 +5,37 @@ import { Suspense } from 'react';
 import Table from '@/app/ui/customers/table';
 import Pagination from '@/app/ui/customers/pagination';
 import { fetchCustomersPages } from '@/app/lib/data';
-import { getLang, t } from '@/app/lib/i18n/i18n';
+import { t } from '@/app/lib/i18n/i18n';
+import { cookies } from 'next/headers';
 
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
     page?: string;
-    lang?: string;
   }>;
 }) {
+  // ===== ambil query & page dari URL =====
   const searchParams = await props.searchParams;
-
-  const lang = getLang(searchParams);
-  const tr = t(lang);
-
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
 
+  // ===== ambil lang dari COOKIE =====
+  const lang: 'id' | 'en' =
+    (await cookies()).get('lang')?.value === 'en' ? 'en' : 'id';
+
+  const tr = t(lang);
+
+  // ===== data =====
   const totalPages = await fetchCustomersPages(query);
 
   return (
     <div className="w-full">
-      {/* ❗ HAPUS kalau judul sudah ada di Table */}
-      {/* <h1 className="mb-4 text-xl md:text-2xl">{tr.customers}</h1> */}
-
       <Suspense key={query + currentPage} fallback={<p>{tr.loading}</p>}>
         <Table lang={lang} query={query} currentPage={currentPage} />
       </Suspense>
 
       <div className="mt-5 flex w-full justify-center">
-        {/* ✅ KIRIM LANG */}
-        <Pagination lang={lang} totalPages={totalPages} />
+        <Pagination lang={lang} totalPages={totalPages} currentPage={0} />
       </div>
     </div>
   );

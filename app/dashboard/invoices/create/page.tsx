@@ -1,15 +1,16 @@
 import Form from '@/app/ui/invoices/create-form';
 import { fetchCustomers } from '@/app/lib/data';
-import { getLang } from '@/app/lib/i18n/i18n';
+import { cookies } from 'next/headers';
 
-export default async function Page(props: {
-  searchParams?: Promise<{
-    lang?: string;
-  }>;
-}) {
-  const searchParams = await props.searchParams;
-  const lang = getLang(searchParams);
+export const dynamic = 'force-dynamic';
 
+export default async function Page() {
+  // ===== ambil lang dari COOKIE =====
+  const cookieStore = cookies();
+  const langCookie = (await cookieStore).get('lang')?.value;
+  const lang: 'id' | 'en' = langCookie === 'en' ? 'en' : 'id';
+
+  // ===== data =====
   const customers = await fetchCustomers();
 
   return <Form lang={lang} customers={customers} />;

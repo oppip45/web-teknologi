@@ -6,9 +6,11 @@ import { t } from '@/app/lib/i18n/i18n';
 export default function Pagination({
   lang,
   totalPages,
+  currentPage,
 }: {
   lang: 'id' | 'en';
   totalPages: number;
+  currentPage: number;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -16,12 +18,9 @@ export default function Pagination({
 
   const tr = t(lang);
 
-  const currentPage = Number(searchParams.get('page')) || 1;
-
   function createPageURL(pageNumber: number) {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', pageNumber.toString());
-    params.set('lang', lang); // 🔥 PENTING: biar bahasa gak reset
     replace(`${pathname}?${params.toString()}`);
   }
 

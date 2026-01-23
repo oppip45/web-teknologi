@@ -3,26 +3,24 @@ export const dynamic = 'force-dynamic';
 
 import Form from '@/app/ui/invoices/edit-form';
 import { fetchInvoiceById, fetchCustomers } from '@/app/lib/data';
-import { getLang } from '@/app/lib/i18n/i18n';
+import { cookies } from 'next/headers';
 
-type PageProps = {
-  params: Promise<{
-    id?: string;
-  }>;
-  searchParams?: {
-    lang?: string;
-  };
-};
-
-export default async function Page({ params, searchParams }: PageProps) {
-  const { id } = await params;
+export default async function Page({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const { id } = params;
 
   if (!id) {
     throw new Error('Invoice ID is missing from route params');
   }
 
-  const lang = getLang(searchParams);
+  // ===== ambil lang dari COOKIE =====
+  const lang: 'id' | 'en' =
+    (await cookies()).get('lang')?.value === 'en' ? 'en' : 'id';
 
+  // ===== data =====
   const invoice = await fetchInvoiceById(id);
   const customers = await fetchCustomers();
 

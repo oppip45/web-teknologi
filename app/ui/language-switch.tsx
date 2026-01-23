@@ -1,21 +1,31 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function LanguageSwitch() {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
 
-  const currentLang = params.get('lang') || 'id';
+  const [currentLang, setCurrentLang] = useState<'id' | 'en'>('id');
 
-function setLang(lang: string) {
-  const newParams = new URLSearchParams(params.toString());
-  newParams.set('lang', lang);
+  useEffect(() => {
+    const match = document.cookie.match(/(^| )lang=([^;]+)/);
+    if (match?.[2] === 'en') setCurrentLang('en');
+  }, []);
 
-  router.replace(`${pathname}?${newParams.toString()}`);
-  router.refresh(); // 🔥 INI YANG HILANG & BIKIN LO STRESS
-}
+  function setLang(lang: 'id' | 'en') {
+    document.cookie = `lang=${lang}; path=/`;
+
+    const newParams = new URLSearchParams(params.toString());
+    // ❌ JANGAN SIMPAN LANG DI URL LAGI
+    newParams.delete('lang');
+
+    router.replace(`${pathname}?${newParams.toString()}`);
+    router.refresh();
+    setCurrentLang(lang);
+  }
 
   return (
     <div className="flex gap-2">
@@ -27,6 +37,7 @@ function setLang(lang: string) {
       >
         🇮🇩 ID
       </button>
+
       <button
         onClick={() => setLang('en')}
         className={`px-3 py-1 rounded ${

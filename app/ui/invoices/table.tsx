@@ -1,9 +1,16 @@
 import Image from 'next/image';
 import { UpdateInvoice, DeleteInvoice } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
-import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
+import { formatDateToLocal } from '@/app/lib/utils';
 import { InvoicesTable as InvoiceType } from '@/app/lib/definitions';
 import { t } from '@/app/lib/i18n/i18n';
+
+function formatMoney(amount: number, lang: 'id' | 'en') {
+  return new Intl.NumberFormat(lang === 'id' ? 'id-ID' : 'en-US', {
+    style: 'currency',
+    currency: 'IDR',
+  }).format(amount / 100);
+}
 
 export default function InvoicesTable({
   lang,
@@ -18,7 +25,6 @@ export default function InvoicesTable({
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
-
           {/* ================= MOBILE ================= */}
           <div className="md:hidden">
             {invoices.map((invoice) => (
@@ -46,7 +52,7 @@ export default function InvoicesTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {formatCurrency(invoice.amount)}
+                      {formatMoney(invoice.amount, lang)}
                     </p>
                     <p>{formatDateToLocal(invoice.date, lang)}</p>
                   </div>
@@ -105,7 +111,7 @@ export default function InvoicesTable({
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatCurrency(invoice.amount)}
+                    {formatMoney(invoice.amount, lang)}
                   </td>
 
                   <td className="whitespace-nowrap px-3 py-3">
@@ -126,7 +132,6 @@ export default function InvoicesTable({
               ))}
             </tbody>
           </table>
-
         </div>
       </div>
     </div>

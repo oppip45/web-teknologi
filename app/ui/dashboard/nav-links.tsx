@@ -8,19 +8,11 @@ import { t } from '@/app/lib/i18n/i18n';
 
 type NavKey = 'dashboard' | 'invoices' | 'customers';
 
-const links: {
-  key: NavKey;
-  href: string;
-  icon: any;
-}[] = [
+const links = [
   { key: 'dashboard', href: '/dashboard', icon: HomeIcon },
-  {
-    key: 'invoices',
-    href: '/dashboard/invoices',
-    icon: DocumentDuplicateIcon,
-  },
+  { key: 'invoices', href: '/dashboard/invoices', icon: DocumentDuplicateIcon },
   { key: 'customers', href: '/dashboard/customers', icon: UserGroupIcon },
-];
+] as const;
 
 export default function NavLinks({ lang }: { lang: 'id' | 'en' }) {
   const tr = t(lang);
@@ -29,11 +21,14 @@ export default function NavLinks({ lang }: { lang: 'id' | 'en' }) {
     <>
       {links.map((link) => {
         const LinkIcon = link.icon;
+
         return (
           <Link
             key={link.key}
             href={`${link.href}?lang=${lang}`}
-            className="flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3"
+            className="flex h-[48px] grow items-center justify-center gap-2 rounded-md
+              bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600
+              md:flex-none md:justify-start md:p-2 md:px-3"
           >
             <LinkIcon className="w-6" />
             <p className="hidden md:block">{tr[link.key]}</p>

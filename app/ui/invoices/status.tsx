@@ -2,12 +2,14 @@ import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { t } from '@/app/lib/i18n/i18n';
 
+type InvoiceStatusType = 'pending' | 'paid';
+
 export default function InvoiceStatus({
   lang,
   status,
 }: {
   lang: 'id' | 'en';
-  status: string;
+  status: InvoiceStatusType;
 }) {
   const tr = t(lang);
 

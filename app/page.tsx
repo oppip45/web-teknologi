@@ -2,14 +2,16 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { lusitana } from '@/app/ui/fonts';
 import Image from 'next/image';
-import { getLang, t } from '@/app/lib/i18n/i18n';
+import { t } from '@/app/lib/i18n/i18n';
+import { cookies } from 'next/headers';
 
-export default function Page({
-  searchParams,
-}: {
-  searchParams?: { lang?: string };
-}) {
-  const lang = getLang(searchParams);
+export const dynamic = 'force-dynamic';
+
+export default async function Page() {
+  // ===== ambil lang dari COOKIE =====
+  const lang: 'id' | 'en' =
+    (await cookies()).get('lang')?.value === 'en' ? 'en' : 'id';
+
   const tr = t(lang);
 
   return (
@@ -43,8 +45,9 @@ export default function Page({
             <b>{tr.lecturerName}</b>
           </p>
 
+          {/* ===== LOGIN LINK (NO LANG PARAM) ===== */}
           <Link
-            href={`/login?lang=${lang}`}
+            href="/login"
             className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
           >
             <span>{tr.login}</span>

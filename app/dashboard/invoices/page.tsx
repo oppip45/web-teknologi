@@ -5,23 +5,27 @@ import Table from '@/app/ui/invoices/table';
 import Pagination from '@/app/ui/invoices/pagination';
 import { CreateInvoice } from '@/app/ui/invoices/buttons';
 import { fetchFilteredInvoices, fetchInvoicesPages } from '@/app/lib/data';
-import { getLang, t } from '@/app/lib/i18n/i18n';
+import { t } from '@/app/lib/i18n/i18n';
+import { cookies } from 'next/headers';
 
 export default async function Page(props: {
   searchParams?: Promise<{
     query?: string;
     page?: string;
-    lang?: string;
   }>;
 }) {
+  // ===== ambil query & page dari URL =====
   const searchParams = await props.searchParams;
-
-  const lang = getLang(searchParams);
-  const tr = t(lang);
-
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
 
+  // ===== ambil lang dari COOKIE =====
+  const cookieStore = cookies();
+  const langCookie = (await cookieStore).get('lang')?.value;
+  const lang: 'id' | 'en' = langCookie === 'en' ? 'en' : 'id';
+  const tr = t(lang);
+
+  // ===== data =====
   const invoices = await fetchFilteredInvoices(query, currentPage);
   const totalPages = await fetchInvoicesPages(query);
 

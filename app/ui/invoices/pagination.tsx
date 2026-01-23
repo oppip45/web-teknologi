@@ -25,7 +25,8 @@ export default function Pagination({
   function createPageURL(page: number | string) {
     const params = new URLSearchParams(searchParams.toString());
     params.set('page', page.toString());
-    params.set('lang', lang); // 🔥 jaga bahasa
+    // ❌ JANGAN SIMPAN LANG DI URL
+    params.delete('lang');
     return `${pathname}?${params.toString()}`;
   }
 

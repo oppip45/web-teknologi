@@ -1,5 +1,3 @@
-import { date } from "zod/v4";
-
 export const translations = {
   en: {
     // ================= NAV / GENERAL =================
@@ -66,7 +64,7 @@ export const translations = {
     customer: 'Customer',
     selectCustomer: 'Select customer',
     amount: 'Amount',
-    date: 'date',
+    date: 'Date',
     enterAmount: 'Enter amount',
     status: 'Status',
     paidStatus: 'Paid',
@@ -150,13 +148,10 @@ export const translations = {
     // ================= BREADCRUMB =================
     home: 'Beranda',
   },
-};
+} as const;
 
-export function getLang(searchParams?: { lang?: string }) {
-  if (searchParams?.lang === 'en') return 'en';
-  return 'id';
-}
+export type Lang = 'id' | 'en';
 
-export function t(lang: 'id' | 'en') {
+export function t(lang: Lang) {
   return translations[lang];
 }

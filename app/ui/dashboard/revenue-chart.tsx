@@ -14,11 +14,12 @@ export default function RevenueChart({
   const chartHeight = 350;
   const tr = t(lang);
 
-  const { yAxisLabels, topLabel } = generateYAxis(revenue);
-
+  // 🔥 AMAN KALAU DATA KOSONG
   if (!revenue || revenue.length === 0) {
     return <p className="mt-4 text-gray-400">{tr.noData}</p>;
   }
+
+  const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
   return (
     <div className="w-full md:col-span-4">
@@ -33,7 +34,7 @@ export default function RevenueChart({
             gridTemplateColumns: `repeat(${revenue.length + 1}, minmax(0, 1fr))`,
           }}
         >
-          {/* Y axis */}
+          {/* Y AXIS */}
           <div
             className="mb-6 hidden flex-col justify-between text-sm text-gray-400 sm:flex"
             style={{ height: `${chartHeight}px` }}
@@ -43,17 +44,15 @@ export default function RevenueChart({
             ))}
           </div>
 
-          {/* Bars */}
+          {/* BARS */}
           {revenue.map((month) => (
             <div key={month.month} className="flex flex-col items-center gap-2">
               <div
                 className="w-full rounded-md bg-blue-300"
                 style={{
-                  height: `${
-                    (chartHeight / topLabel) * Number(month.revenue)
-                  }px`,
+                  height: `${(chartHeight / topLabel) * Number(month.revenue)}px`,
                 }}
-              ></div>
+              />
               <p className="-rotate-90 text-sm text-gray-400 sm:rotate-0">
                 {month.month}
               </p>

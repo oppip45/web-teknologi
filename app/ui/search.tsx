@@ -12,10 +12,6 @@ export default function Search({ placeholder }: { placeholder: string }) {
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    // ✅ JAGA LANG BIAR GAK HILANG
-    const lang = searchParams.get('lang');
-    if (lang) params.set('lang', lang);
-
     if (term) {
       params.set('query', term);
       params.set('page', '1');
