@@ -5,6 +5,7 @@ import {
   InboxIcon,
 } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
+import { t } from '@/app/lib/i18n/i18n';
 
 const iconMap = {
   collected: BanknotesIcon,
@@ -14,23 +15,27 @@ const iconMap = {
 };
 
 export default function Cards({
+  lang,
   totalPaidInvoices,
   totalPendingInvoices,
   numberOfInvoices,
   numberOfCustomers,
 }: {
+  lang: 'id' | 'en';
   totalPaidInvoices: string;
   totalPendingInvoices: string;
   numberOfInvoices: number;
   numberOfCustomers: number;
 }) {
+  const tr = t(lang);
+
   return (
     <>
-      <Card title="Collected" value={totalPaidInvoices} type="collected" />
-      <Card title="Pending" value={totalPendingInvoices} type="pending" />
-      <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
+      <Card title={tr.collected} value={totalPaidInvoices} type="collected" />
+      <Card title={tr.pending} value={totalPendingInvoices} type="pending" />
+      <Card title={tr.totalInvoices} value={numberOfInvoices} type="invoices" />
       <Card
-        title="Total Customers"
+        title={tr.totalCustomers}
         value={numberOfCustomers}
         type="customers"
       />

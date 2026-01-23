@@ -3,30 +3,35 @@ import { lusitana } from '@/app/ui/fonts';
 import Search from '@/app/ui/search';
 import { fetchFilteredCustomers } from '@/app/lib/data';
 import { FormattedCustomersTable } from '@/app/lib/definitions';
+import { t } from '@/app/lib/i18n/i18n';
 
 export default async function CustomersTable({
+  lang,
   query,
   currentPage,
 }: {
+  lang: 'id' | 'en';
   query: string;
   currentPage: number;
 }) {
+  const tr = t(lang);
+
   const customers: FormattedCustomersTable[] =
     await fetchFilteredCustomers(query, currentPage);
 
   return (
     <div className="w-full">
       <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
-        Customers
+        {tr.customers}
       </h1>
 
-      <Search placeholder="Search customers..." />
+      <Search placeholder={tr.searchCustomers} />
 
       <div className="mt-6 flow-root">
         <div className="overflow-x-auto">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
-              {/* Mobile */}
+              {/* ================= MOBILE ================= */}
               <div className="md:hidden">
                 {customers.map((customer) => (
                   <div
@@ -52,41 +57,45 @@ export default async function CustomersTable({
                         </p>
                       </div>
                     </div>
+
                     <div className="flex w-full items-center justify-between border-b py-5">
                       <div className="flex w-1/2 flex-col">
-                        <p className="text-xs">Pending</p>
+                        <p className="text-xs">{tr.pending}</p>
                         <p className="font-medium">{customer.total_pending}</p>
                       </div>
                       <div className="flex w-1/2 flex-col">
-                        <p className="text-xs">Paid</p>
+                        <p className="text-xs">{tr.paid}</p>
                         <p className="font-medium">{customer.total_paid}</p>
                       </div>
                     </div>
+
                     <div className="pt-4 text-sm">
-                      <p>{customer.total_invoices} invoices</p>
+                      <p>
+                        {customer.total_invoices} {tr.invoices}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Desktop */}
+              {/* ================= DESKTOP ================= */}
               <table className="hidden min-w-full rounded-md text-gray-900 md:table">
                 <thead className="rounded-md bg-gray-50 text-left text-sm font-normal">
                   <tr>
                     <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                      Name
+                      {tr.name}
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Email
+                      {tr.email}
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Total Invoices
+                      {tr.totalInvoices}
                     </th>
                     <th scope="col" className="px-3 py-5 font-medium">
-                      Total Pending
+                      {tr.totalPending}
                     </th>
                     <th scope="col" className="px-4 py-5 font-medium">
-                      Total Paid
+                      {tr.totalPaid}
                     </th>
                   </tr>
                 </thead>
@@ -106,15 +115,19 @@ export default async function CustomersTable({
                           <p>{customer.name}</p>
                         </div>
                       </td>
+
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {customer.email}
                       </td>
+
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {customer.total_invoices}
                       </td>
+
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                         {customer.total_pending}
                       </td>
+
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
                         {customer.total_paid}
                       </td>
@@ -122,6 +135,7 @@ export default async function CustomersTable({
                   ))}
                 </tbody>
               </table>
+              {/* ================= END ================= */}
             </div>
           </div>
         </div>
